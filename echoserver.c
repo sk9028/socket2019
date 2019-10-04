@@ -6,8 +6,9 @@
 
 #define PORT 10000
 
-char buffer[100] = "안녕하세요. 만나서 반가워요.\n";
 char rcvbuffer[100];
+char buffer1[100]="내 이름은 현성국이야\n";
+char buffer2[100]="나는 24살이야\n";
 int main(){
 	int c_socket, s_socket;
 	struct sockaddr_in s_addr, c_addr;
@@ -47,9 +48,11 @@ int main(){
 		//클라이언트의 요청이 오면 허용(accept)해 주고, 해당 클라이언트와 통신할 수 있도록 클라이언트 소켓(c_socket)을 반환함.
 		printf("/client is connected\n");
 		printf("클라이언트 접속 허용\n");
+
 			n=read(c_socket, rcvbuffer, sizeof(rcvbuffer));
-			
-			write(c_socket, buffer); //클라이언트에게 buffer의 내용을 전송함
+			write(c_socket, buffer1); //클라이언트에게 buffer의 내용을 전송함
+			n=read(c_socket, rcvbuffer, sizeof(rcvbuffer));
+			write(c_socket, buffer2);
 		close(c_socket);
 	}
 	close(s_socket);
