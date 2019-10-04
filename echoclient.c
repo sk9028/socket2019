@@ -1,5 +1,3 @@
-//4-2
-
 #include <stdio.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -12,9 +10,10 @@
 int main(){
 	int c_socket; 
 	struct sockaddr_in c_addr;
-	int n,i=0;
+	int n;
 	char rcvBuffer[BUFSIZE];//서버에서 보내준 메세지를 저장하는 변수
 	char sendbuffer[BUFSIZE]="안녕하세요";
+	char *str;
 	//1. 클라이언트 소켓 생성
 	c_socket = socket(PF_INET, SOCK_STREAM, 0); //서버와 동일한 설정으로 생성
 	//2.소켓 정보 초기화
@@ -31,17 +30,12 @@ int main(){
 		return -1;  //프로세스 종료
 	}
 	//4. 서버에 메시지 보낼때 키보드로부터 메세지 입력 받기
-	while(i<2){
 		fgets(sendbuffer, sizeof(sendbuffer),stdin);
 		//5. 서버에 메시지 주기
 		write(c_socket,sendbuffer,strlen(sendbuffer));
-		//입력받은 메세지가  quit이면  break
-		if(strncasecmp(sendbuffer, "quit", 4) == 0) //sendbuffer와  quit의 4문자를 비교해서 같으면 break실행
-		{
-			break;
-		} 
 		//5. 서버에서 보낸 메시지 읽기 
 		n = read(c_socket, rcvBuffer, sizeof(rcvBuffer)); 
+		strcpy(str,rcvBuffer);
 		
 		//서버에서 보내준 메세지를 rcvBuffer에 저장하고, 메세지의 길이를 리턴
 		//만약 read에 실패하면, -1을 리턴
@@ -50,11 +44,9 @@ int main(){
 			return -1;
 		}
 		rcvBuffer[n] = '\0'; //문자열 뒷부분 깨짐 방지
-		printf("received data: %s\n", rcvBuffer); //서버에서 받은 메세지 출력
-		i++;
-}
+		printf("received data : %s\n",rcvBuffer);
+		printf("길이 : %d\n",strlen(str+8));
 		close(c_socket);
 
 	return 0;	
 }
-
