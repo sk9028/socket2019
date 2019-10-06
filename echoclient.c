@@ -14,8 +14,13 @@ int main(){
 	char rcvBuffer[BUFSIZE];//서버에서 보내준 메세지를 저장하는 변수
 	char sendbuffer[BUFSIZE]="안녕하세요";
 	char *str;
-	char *str1;
-	int a=5 ,b=10;
+	char strr[BUFSIZE]="the little prince";
+	char *ptr;
+	char *ptrr;
+	char *ptr1;
+	char *ptr2;
+	char *ptr3;
+	char *ptr4;
 	//1. 클라이언트 소켓 생성
 	c_socket = socket(PF_INET, SOCK_STREAM, 0); //서버와 동일한 설정으로 생성
 	//2.소켓 정보 초기화
@@ -36,10 +41,16 @@ int main(){
 		//5. 서버에 메시지 주기
 		write(c_socket,sendbuffer,strlen(sendbuffer));
 		//5. 서버에서 보낸 메시지 읽기 
-		n = read(c_socket, rcvBuffer, sizeof(rcvBuffer)); 
+		n = read(c_socket, rcvBuffer, sizeof(rcvBuffer));
 		strcpy(str,rcvBuffer);
-		str=strtok(str,5);
-		str1=strtok(str,10);
+		ptr=str+7;   //strcmp delete
+//		ptrr=str+13;
+		//ptrr=strtok(ptr,"  ");
+		ptr1=strtok(ptr," ");  			//strcmp [hello] hello
+		ptr2=strtok(ptr," ");
+		           //strcmp hello [hello]
+		
+		
 		
 		//서버에서 보내준 메세지를 rcvBuffer에 저장하고, 메세지의 길이를 리턴
 		//만약 read에 실패하면, -1을 리턴
@@ -48,9 +59,16 @@ int main(){
 			return -1;
 		}
 		rcvBuffer[n] = '\0'; //문자열 뒷부분 깨짐 방지
-		printf("received data : %s\n",rcvBuffer);
-		printf("길이 : %s\n",str);
-		printf("길이 : %s\n",str1);
+		//printf("길이 : %s \n",ptr);   //str+8=ello hello  ,, str+13=hello
+		printf("first value : %s \n",ptr1);   //str+8=ello hello  ,, str+13=hello
+		printf("second value : %s \n",ptr2);   //str+8=ello hello  ,, str+13=hello
+		if(ptr1==ptr2){
+			printf("two value == %d\n",strcmp(ptr1,ptr2));
+		}
+		else{
+			printf("two value == 1 n");
+		}
+		
 		close(c_socket);
 
 	return 0;	
