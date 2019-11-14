@@ -24,6 +24,7 @@ char    escape[ ] = "exit";   //클라이언트가 빠져나갈떄 보내는 메
 char    greeting[ ] = "Welcome to chatting room\n"; // 클라이언트가 채팅서버 접속시 보내는 메시지
 char    CODE200[ ] = "Sorry No More Connection\n";  // 서버 접속이 안될떄 보내는 메시지
 int top = -1;  //스택의 가장 최상위
+char user[10];
 
 int main(int argc, char *argv[ ])
 {
@@ -71,11 +72,27 @@ void *do_chat(void *arg)
     int c_socket = *((int *)arg);
     char chatData[CHATDATA];
     int i, n;
+	
     while(1) {
         memset(chatData, 0, sizeof(chatData));
         if((n = read(c_socket, chatData, sizeof(chatData))) > 0) {
+
             for(i=0;i<list_c[top];i++){           
-            write(list_c[i], chatData,strlen(chatData));
+				
+				
+          		write(list_c[i], chatData,strlen(chatData));
+			if(strncasecmp(chatData,"/w ",3)){
+				char *id;
+				char *token;
+				char *b;
+				b=strtok(chatData," "); // userid [a] , [b] , [c]...
+				user[i]=b;
+				token=strtok(chatData," ");   //    [/w]
+				id = strtok(NULL,"\0");  //    /w [id]
+				if(id==user[i]){
+					write(list_c[i], chatData,strlen(chatData));
+				}
+			}
 		     printf("%s",chatData);			
             		}
             if(strstr(chatData, escape) != NULL) {
